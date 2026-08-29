@@ -1,2 +1,11 @@
-# Auto detect text files and perform LF normalization
+# Auto-detect text files and perform LF normalization to prevent CRLF/LF line ending issues across operating systems
 * text=auto
+
+# Define Python files to use language-specific diff parsing on GitHub and git CLI
+*.py diff=python
+
+# Enforce Unix line endings (LF) for shell scripts
+*.sh text eol=lf
+
+# Enforce Windows line endings (CRLF) for batch scripts
+*.bat text eol=crlf
