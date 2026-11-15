@@ -13,6 +13,8 @@
 #	> Bu toplamın 10'a bölümünden kalan (yani ... mod 10), 11. haneyi verir.
 #	> Formül: (1'den 10'a kadar olan basamakların toplamı) mod 10
 #──────────────────────────────────────────────────────────────────────────────────────────────────────────
+import arayuz
+
 def kimlik_no_hesaplama(kimlik_no):
     str_kimlik_no = str(kimlik_no).strip()
 
@@ -24,6 +26,16 @@ def kimlik_no_hesaplama(kimlik_no):
     hane_10 = ((tek_haneler_toplam * 7) - cift_haneler_toplam) % 10
     hane_11 = sum(rakamlar[:10]) % 10
 
-    if hane_10 == rakamlar[9] and hane_11 == rakamlar[10]:
-        print("Kimlik numarası başarıyla doğrulandı.")
-        return True
+    gecerli_mi = (hane_10 == rakamlar[9] and hane_11 == rakamlar[10])
+
+    # ASCII doğrulama raporunu ekrana basar
+    arayuz.kimlik_dogrulama_raporu_ciz(
+        str_kimlik_no, 
+        tek_haneler_toplam, 
+        cift_haneler_toplam, 
+        hane_10, 
+        hane_11, 
+        gecerli_mi
+    )
+
+    return gecerli_mi

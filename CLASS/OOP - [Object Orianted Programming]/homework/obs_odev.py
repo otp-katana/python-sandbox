@@ -123,32 +123,55 @@ class OgrenciBilgiSistemi:
         # adı üzerinden yerel bir parametredir. İkisi
         # birbirine karışmaz ve farklı amaca hizmet ederler.
         #───────────────────────────────────────────────────
+    
 
-#!düzenlenecek...   
+    #───────────────────────────────────────────────
+    #   ➥ GÖRÜNTÜLEME VE DERS İŞLEMLERİ (ARAYÜZ) ✎
+    #───────────────────────────────────────────────
+    #───────────────────────────────────────────────
+    #⤷ Öğrenci bilgilerinin ve ders notlarının
+    # terminal ekranında okunaklı, düzenli bir ASCII
+    # çerçeve içinde sunulması amacıyla standart
+    # print() ifadeleri yerine 'arayuz' modülündeki
+    # görselleştirme fonksiyonları entegre edildi.
+    #───────────────────────────────────────────────
     def bilgileri_goster(self):
-        print("-" * 80)
-        print(f"Öğrencinin Adı: {self.ad}")
-        print(f"Öğrencinin Soyadı: {self.soyad}")
-        print("-" * 80)
-        print(f"Öğrencinin TC Kimlik Numarası: {self.kimlik_no}")
-        print(f"Öğrencinin Doğum Tarihi: {self.dogum_tarihi}")
-        print(f"Öğrencinin Bölümü: {self.bolum}")
-        print(f"Öğrencinin Okulu: {self.fakulte}")
-        print(f"Öğrencinin Öğrenci Numarası: {self.ogrenci_no}")
-        print("-" * 80)
+        arayuz.ogrenci_karti_ciz(self)
 
-    # Yeni ders ve not eklemek için metot
-    def not_ekle(self, ders_adi, dersin_notu):
-        self.__dersler_ve_notlar[ders_adi] = dersin_notu
-        print(f"{ders_adi} dersi notu ({dersin_notu}) başarıyla eklendi.")
+    #───────────────────────────────────────────────
+    #⤷ Private olarak tanımlanan '__dersler_ve_notlar'
+    # sözlüğüne dışarıdan güvenli şekilde yeni ders
+    # ve not eklenmesini sağlar. İşlem sonucunda
+    # kullanıcıya renkli ASCII onay kutusu gösterilir.
+    #───────────────────────────────────────────────
+    def not_ekle(self, ders_adi, ders_notu):
+        self.__dersler_ve_notlar[ders_adi] = ders_notu
+        arayuz.ust_cizgi()
+        arayuz.bilgi_mesaji("✔", f"{ders_adi} dersi notu ({ders_notu}) başarıyla eklendi.", "\033[92m")
+        arayuz.alt_cizgi()
 
-    # Eklenen notları görüntülemek için düzeltilen metot
+    #───────────────────────────────────────────────
+    #⤷ Sorgulanan dersin '__dersler_ve_notlar' içinde
+    # bulunup bulunmadığını kontrol eder ve sonucu
+    # duruma göre (bilgi veya hata rengiyle) ASCII
+    # çerçevesi içinde ekrana yansıtır.
+    #───────────────────────────────────────────────
     def not_goruntule(self, ders_adi):
+        arayuz.ust_cizgi()
         if ders_adi in self.__dersler_ve_notlar:
-            print(f"Öğrenci {self.ad}'nin {ders_adi} dersi notu: {self.__dersler_ve_notlar[ders_adi]}")
+            not_degeri = self.__dersler_ve_notlar[ders_adi]
+            arayuz.bilgi_mesaji("➤", f"{self.ad} adlı öğrencinin {ders_adi} notu: {not_degeri}", "\033[96m")
         else:
-            print(f"Öğrenci {self.ad}, {ders_adi} dersini henüz almamış.")
-#!düzenlenecek...
+            arayuz.bilgi_mesaji("✖", f"{self.ad}, {ders_adi} dersini henüz almamış.", "\033[91m")
+        arayuz.alt_cizgi()
+
+    #───────────────────────────────────────────────
+    #⤷ Öğrencinin aldığı tüm dersleri, notlarını ve
+    # geçme/kalma durumlarını tek bir ASCII tablo
+    # altında toplu olarak listeler.
+    #───────────────────────────────────────────────
+    def tum_notlari_listele(self):
+        arayuz.ders_tablosu_ciz(self.ad, self.__dersler_ve_notlar)
 
 
 #────────────────────────────────────────────────────
@@ -177,21 +200,33 @@ try:
         "Yönetim Bilişim Sistemleri", "1", 12345678912
     )
 
-
-    #!düzenlenecek...
+    #───────────────────────────────────────────────
+    #      ➥ NESNE METOTLARI VE ARAYÜZ TESTİ
+    #───────────────────────────────────────────────
+    #───────────────────────────────────────────────
+    #⤷ Kimlik doğrulamasını başarıyla geçen 'ogrenci_1'
+    # nesnesine ait temel bilgilerin ASCII kartı
+    # formatında ekrana yazdırılması sağlanır.
+    #───────────────────────────────────────────────
     ogrenci_1.bilgileri_goster()
 
-    # Önce nota ekleme yapıyoruz
+    #───────────────────────────────────────────────
+    #⤷ Private olarak saklanan '__dersler_ve_notlar'
+    # niteliğine metot aracılığıyla yeni ders ve not
+    # kayıtları eklenir. Her ekleme işlemi sonunda
+    # arayüz modülü üzerinden onay kutusu gösterilir.
+    #───────────────────────────────────────────────
     ogrenci_1.not_ekle("Matematik", 85)
     ogrenci_1.not_ekle("Programlama", 95)
 
-    print("-" * 80)
-
-    # Sonra eklenen notu sorguluyoruz
+    #───────────────────────────────────────────────
+    #⤷ Eklenen ve eklenmeyen derslerin sorgulanması
+    # ile tüm ders listesinin toplu ASCII tablosu
+    # halinde görüntülenmesi test edilir.
+    #───────────────────────────────────────────────
     ogrenci_1.not_goruntule("Matematik")
-    ogrenci_1.not_goruntule("Fizik")  # Eklenmeyen ders kontrolü
-    #!düzenlenecek...
-
+    ogrenci_1.not_goruntule("Fizik")    #* Eklenmeyen ders kontrolü (Hata mesajı kutusu tetiklenir).
+    ogrenci_1.tum_notlari_listele()    #* Tüm derslerin ve geçme/kalma durumlarının toplu tablosu.
 
 except (TypeError, ValueError) as hata:
     print(f"Başarısız kayıt işlemi!\nSebep: {hata}")
